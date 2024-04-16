@@ -1,0 +1,57 @@
+#!/bin/sh
+#Legend Of Zelda: Link to the Past Setup Script
+
+name="Legend Of Zelda: Link to the Past"
+Game=Zelda3
+game=zelda3
+configdir="/home/$USER/.config/$Game"
+Sysdir=/usr/share/games/Zeldalttp
+binary=zelda3
+image_path="/usr/share/games/Zeldalttp/$game-title.png"
+icon_path="/usr/share/games/Zeldalttp/$game.png"
+ 
+if [ -d "$configdir" ]; then
+  ### Take action if $configdir exists ###
+  echo "Starting game"
+  cd $configdir 
+  ./$binary
+else
+  ###  Control will jump here if $configdir does NOT exists ###
+  echo "Welcome to the $name setup, we will begin setting the game up for you."
+  yad --width=750 --height=100 --info --title="$name Installation" --window-icon="$icon_path" --image="$image_path" --text="Welcome to the $name setup, we will begin setting the game up for you." --button="OK:1" --button="Cancel:0"
+  if [ $? -eq 0 ]; then
+  echo "Script exited by user"
+  exit 0
+fi
+(
+echo "10" ; sleep 1
+echo "# Setting game files" ; sleep 1
+echo "50" ; sleep 1
+echo "# Creating config folder" ; sleep 1
+mkdir $configdir
+echo "80" ; sleep 1
+echo "# Creating symlink the Zelda3 binary.." ; sleep 1
+ln -s /bin/zelda3 "$configdir"
+echo "90" ; sleep 1
+echo "Copying needed files" /
+ln -s $Sysdir/zelda3_assets.dat $configdir
+cp -r $Sysdir/zelda3.ini $configdir
+echo "100" ; sleep 1
+cd $configdir
+./$binary
+) |
+yad --progress \
+  --width=550 \
+  --height=100 \
+  --title="Setting up $name" \
+  --text="Preparing to setup game..." \
+   --window-icon="$icon_path" \
+  --percentage=0 \
+  --auto-close
+
+if [ "$?" = -1 ] ; then
+        yad --error \
+          --text="Update canceled."
+fi
+fi
+

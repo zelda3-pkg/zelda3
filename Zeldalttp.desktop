@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=Legend Of Zelda: Link to the Past
+Comment=Legend Of Zelda: Link to the Past port using the zelda3 project
+Icon=zelda3
+Exec=zeldalttp
+Actions=
+Categories=Game;
+StartupWMClass=zelda3
